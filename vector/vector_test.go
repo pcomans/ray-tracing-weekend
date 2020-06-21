@@ -1,6 +1,7 @@
 package vector
 
 import (
+	"math"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -8,42 +9,60 @@ import (
 
 func TestConstructor(t *testing.T) {
 	v := Vec3{1, 2, 3}
-	assert.Equal(t, v.x, 1.0)
-	assert.Equal(t, v.y, 2.0)
-	assert.Equal(t, v.z, 3.0)
+	assert.Equal(t, 1.0, v.x)
+	assert.Equal(t, 2.0, v.y)
+	assert.Equal(t, 3.0, v.z)
 }
 func TestNeg(t *testing.T) {
 	v := Vec3{-1, -2, -3}
-	vn := v.Neg()
+	vn := Neg(v)
 
-	if vn.x != 1.0 {
-		t.Errorf("x = %f; want 1", vn.x)
-	}
-	if vn.y != 2.0 {
-		t.Errorf("y = %f; want 2", vn.y)
-	}
-	if vn.z != 3.0 {
-		t.Errorf("z = %f; want 3", vn.z)
-	}
+	assert.Equal(t, 1.0, vn.x)
+	assert.Equal(t, 2.0, vn.y)
+	assert.Equal(t, 3.0, vn.z)
 }
 func TestAdd(t *testing.T) {
 	v := Vec3{1, 2, 3}
 	w := Vec3{4, 5, 6}
 
-	s := v.Add(w)
-	r := w.Add(v)
+	s := Add(v, w)
+	r := Add(w, v)
 
-	if s != r {
-		t.Errorf("s != t; s = %v; t = %v", s, r)
-	}
+	assert.Equal(t, s, r)
+	assert.Equal(t, 5.0, s.x)
+	assert.Equal(t, 7.0, s.y)
+	assert.Equal(t, 9.0, s.z)
+}
 
-	if s.x != 5.0 {
-		t.Errorf("x = %f; want 5", s.x)
-	}
-	if s.y != 7.0 {
-		t.Errorf("y = %f; want 7", s.y)
-	}
-	if s.z != 9.0 {
-		t.Errorf("z = %f; want 9", s.z)
-	}
+func TestMul(t *testing.T) {
+	v := Vec3{1, 2, 3}
+
+	s := Mul(v, 2)
+	r := Mul(v, -1)
+
+	assert.Equal(t, r, Neg(v))
+	assert.Equal(t, 2.0, s.x)
+	assert.Equal(t, 4.0, s.y)
+	assert.Equal(t, 6.0, s.z)
+}
+
+func TestDiv(t *testing.T) {
+	v := Vec3{1, 2, 3}
+
+	s := Div(v, 2)
+	r := Div(v, 0.5)
+
+	assert.Equal(t, Mul(v, 2), r)
+	assert.Equal(t, 0.5, s.x)
+	assert.Equal(t, 1.0, s.y)
+	assert.Equal(t, 1.5, s.z)
+}
+
+func TestLengthSquared(t *testing.T) {
+	assert.Equal(t, 14.0, Vec3{1, 2, 3}.LengthSquared())
+	assert.Equal(t, 14.0, Vec3{-1, 2, 3}.LengthSquared())
+}
+
+func TestLength(t *testing.T) {
+	assert.Equal(t, math.Sqrt(3), Vec3{1, 1, 1}.Length())
 }
