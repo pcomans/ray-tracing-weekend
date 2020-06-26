@@ -7,6 +7,8 @@ import (
 	"image/png"
 	"log"
 	"os"
+
+	"phpp.me/go_practice/cartesian"
 )
 
 func main() {
@@ -20,15 +22,16 @@ func main() {
 	for j := imageHeight - 1; j >= 0; j-- {
 		l.Printf("Scanlines remaining: %d\n", j)
 		for i := 0; i < imageWidth; i++ {
-			r := float64(i) / float64(imageWidth-1)
-			g := float64(j) / float64(imageHeight-1)
-			b := 0.25
+			c := cartesian.NewColor(
+				255.999*(float64(i)/float64(imageWidth-1)),
+				255.999*(float64(j)/float64(imageHeight-1)),
+				255.999*0.25,
+			)
 
-			ir := uint8(255.999 * r)
-			ig := uint8(255.999 * g)
-			ib := uint8(255.999 * b)
+			d := cartesian.NewColor(128.0, 128.0, 128.0)
+			fmt.Printf("%v", d)
 
-			img.Set(i, j, color.RGBA{ir, ig, ib, 255})
+			img.Set(i, j, color.RGBA{uint8(c.X), uint8(c.Y), uint8(c.Z), 255})
 		}
 	}
 
