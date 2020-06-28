@@ -33,6 +33,11 @@ func Add(v *Vec3, w *Vec3) Vec3 {
 	return Vec3{v.X + w.X, v.Y + w.Y, v.Z + w.Z}
 }
 
+// Sub subtracts two vectors
+func Sub(v *Vec3, w *Vec3) Vec3 {
+	return Vec3{v.X - w.X, v.Y - w.Y, v.Z - w.Z}
+}
+
 // Mul multiplies the vector with a scalar
 func Mul(v *Vec3, s float64) Vec3 {
 	return Vec3{v.X * s, v.Y * s, v.Z * s}

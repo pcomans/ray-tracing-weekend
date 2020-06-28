@@ -12,8 +12,27 @@ import (
 )
 
 func main() {
-	imageWidth := 256
-	imageHeight := 256
+	aspectRatio := 16.0 / 9.0
+	imageWidth := 640
+	imageHeight := int(float64(imageWidth) / aspectRatio)
+
+	viewportHeight := 2.0
+	viewportWidth := aspectRatio * viewportHeight
+	focalLength := 1.0
+
+	origin := cartesian.NewPoint3(0, 0, 0)
+
+	xDim := cartesian.NewVec3(viewportWidth, 0, 0)
+	yDim := cartesian.NewVec3(0, viewportWidth, 0)
+	halfXDim := cartesian.Div(&xDim, 2.0)
+	halfYDim := cartesian.Div(&yDim, 2.0)
+	focalLengthVec := cartesian.NewVec3(0, 0, focalLength)
+	lowerLeftCorner := origin
+	lowerLeftCorner = cartesian.Sub(&lowerLeftCorner, &halfXDim)
+	lowerLeftCorner = cartesian.Sub(&lowerLeftCorner, &halfYDim)
+	lowerLeftCorner = cartesian.Sub(&lowerLeftCorner, &focalLengthVec)
+
+	fmt.Printf("lowerLeftCorner: %+v", lowerLeftCorner)
 
 	img := image.NewRGBA(image.Rect(0, 0, imageWidth, imageHeight))
 

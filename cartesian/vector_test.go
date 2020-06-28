@@ -34,6 +34,20 @@ func TestAdd(t *testing.T) {
 	assert.Equal(t, 9.0, s.Z)
 }
 
+func TestSub(t *testing.T) {
+	v := Vec3{1, 2, 3}
+	w := Vec3{4, 5, 6}
+
+	s := Sub(&v, &w)
+	r := Sub(&w, &v)
+
+	assert.Equal(t, -3.0, s.X)
+	assert.Equal(t, -3.0, s.Y)
+	assert.Equal(t, -3.0, s.Z)
+	assert.Equal(t, 3.0, r.X)
+	assert.Equal(t, 3.0, r.Y)
+	assert.Equal(t, 3.0, r.Z)
+}
 func TestMul(t *testing.T) {
 	v := Vec3{1, 2, 3}
 
