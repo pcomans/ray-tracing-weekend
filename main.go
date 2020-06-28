@@ -28,9 +28,6 @@ func main() {
 				255.999*0.25,
 			)
 
-			d := cartesian.NewColor(128.0, 128.0, 128.0)
-			fmt.Printf("%v", d)
-
 			img.Set(i, j, color.RGBA{uint8(c.X), uint8(c.Y), uint8(c.Z), 255})
 		}
 	}
