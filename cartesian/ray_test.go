@@ -10,7 +10,7 @@ func TestRayAt(t *testing.T) {
 	o1 := Point3{0, 0, 0}
 	d1 := Vec3{1, 1, 1}
 
-	r1 := Ray{&o1, &d1}
+	r1 := Ray{o1, d1}
 
 	p1 := r1.at(1)
 
@@ -27,7 +27,7 @@ func TestRayAt(t *testing.T) {
 	o2 := Point3{1, 2, 3}
 	d2 := Vec3{1, 2, 3}
 
-	r2 := Ray{&o2, &d2}
+	r2 := Ray{o2, d2}
 
 	p3 := r2.at(1)
 

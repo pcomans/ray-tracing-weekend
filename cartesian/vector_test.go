@@ -15,7 +15,7 @@ func TestVec3Constructor(t *testing.T) {
 }
 func TestNeg(t *testing.T) {
 	v := Vec3{-1, -2, -3}
-	vn := Neg(&v)
+	vn := Neg(v)
 
 	assert.Equal(t, 1.0, vn.X)
 	assert.Equal(t, 2.0, vn.Y)
@@ -25,21 +25,27 @@ func TestAdd(t *testing.T) {
 	v := Vec3{1, 2, 3}
 	w := Vec3{4, 5, 6}
 
-	s := Add(&v, &w)
-	r := Add(&w, &v)
+	s := Add(v, w)
+	r := Add(w, v)
 
 	assert.Equal(t, s, r)
 	assert.Equal(t, 5.0, s.X)
 	assert.Equal(t, 7.0, s.Y)
 	assert.Equal(t, 9.0, s.Z)
+
+	u := Add(w, v, v)
+
+	assert.Equal(t, 6.0, u.X)
+	assert.Equal(t, 9.0, u.Y)
+	assert.Equal(t, 12.0, u.Z)
 }
 
 func TestSub(t *testing.T) {
 	v := Vec3{1, 2, 3}
 	w := Vec3{4, 5, 6}
 
-	s := Sub(&v, &w)
-	r := Sub(&w, &v)
+	s := Sub(v, w)
+	r := Sub(w, v)
 
 	assert.Equal(t, -3.0, s.X)
 	assert.Equal(t, -3.0, s.Y)
@@ -47,14 +53,20 @@ func TestSub(t *testing.T) {
 	assert.Equal(t, 3.0, r.X)
 	assert.Equal(t, 3.0, r.Y)
 	assert.Equal(t, 3.0, r.Z)
+
+	u := Sub(w, v, v)
+
+	assert.Equal(t, 2.0, u.X)
+	assert.Equal(t, 1.0, u.Y)
+	assert.Equal(t, 0.0, u.Z)
 }
 func TestMul(t *testing.T) {
 	v := Vec3{1, 2, 3}
 
-	s := Mul(&v, 2)
-	r := Mul(&v, -1)
+	s := Mul(v, 2)
+	r := Mul(v, -1)
 
-	assert.Equal(t, r, Neg(&v))
+	assert.Equal(t, r, Neg(v))
 	assert.Equal(t, 2.0, s.X)
 	assert.Equal(t, 4.0, s.Y)
 	assert.Equal(t, 6.0, s.Z)
@@ -63,10 +75,10 @@ func TestMul(t *testing.T) {
 func TestDiv(t *testing.T) {
 	v := Vec3{1, 2, 3}
 
-	s := Div(&v, 2)
-	r := Div(&v, 0.5)
+	s := Div(v, 2)
+	r := Div(v, 0.5)
 
-	assert.Equal(t, Mul(&v, 2), r)
+	assert.Equal(t, Mul(v, 2), r)
 	assert.Equal(t, 0.5, s.X)
 	assert.Equal(t, 1.0, s.Y)
 	assert.Equal(t, 1.5, s.Z)
@@ -85,8 +97,8 @@ func TestDot(t *testing.T) {
 	v := Vec3{1, 2, 3}
 	w := Vec3{4, 5, 6}
 
-	s := Dot(&v, &w)
-	r := Dot(&w, &v)
+	s := Dot(v, w)
+	r := Dot(w, v)
 
 	assert.Equal(t, s, r)
 	assert.Equal(t, 32.0, s)
@@ -96,9 +108,26 @@ func TestCross(t *testing.T) {
 	v := Vec3{1, 2, 3}
 	w := Vec3{4, 5, 6}
 
-	s := Cross(&v, &w)
-	r := Cross(&w, &v)
+	s := Cross(v, w)
+	r := Cross(w, v)
 
 	assert.Equal(t, Vec3{-3.0, 6.0, -3.0}, s)
 	assert.Equal(t, Vec3{3.0, -6.0, 3.0}, r)
+}
+
+func TestLowerLeftCorner(t *testing.T) {
+	aspectRatio := 16.0 / 9.0
+
+	viewportHeight := 2.0
+	viewportWidth := aspectRatio * viewportHeight
+	focalLength := 1.0
+
+	origin := NewPoint3(0, 0, 0)
+
+	xDim := NewVec3(viewportWidth, 0, 0)
+	yDim := NewVec3(0, viewportWidth, 0)
+
+	lowerLeftCorner := Sub(origin, Div(xDim, 2.0), Div(yDim, 2.0), NewVec3(0, 0, focalLength))
+
+	assert.Equal(t, Vec3{-1.7777777777777777, -1.7777777777777777, -1}, lowerLeftCorner)
 }

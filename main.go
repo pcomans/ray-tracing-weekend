@@ -8,8 +8,14 @@ import (
 	"log"
 	"os"
 
-	"phpp.me/go_practice/cartesian"
+	cc "phpp.me/go_practice/cartesian"
 )
+
+func rayColor(r cc.Ray) cc.Color {
+	unitDirection := cc.UnitVector(r.Direction)
+	t := 0.5*unitDirection.Y + 1.0
+	return cc.Add(cc.Mul(cc.NewColor(1, 1, 1), 1.0-t), cc.Mul(cc.NewColor(0.5, 0.7, 1), t))
+}
 
 func main() {
 	aspectRatio := 16.0 / 9.0
@@ -20,19 +26,12 @@ func main() {
 	viewportWidth := aspectRatio * viewportHeight
 	focalLength := 1.0
 
-	origin := cartesian.NewPoint3(0, 0, 0)
+	origin := cc.NewPoint3(0, 0, 0)
 
-	xDim := cartesian.NewVec3(viewportWidth, 0, 0)
-	yDim := cartesian.NewVec3(0, viewportWidth, 0)
-	halfXDim := cartesian.Div(&xDim, 2.0)
-	halfYDim := cartesian.Div(&yDim, 2.0)
-	focalLengthVec := cartesian.NewVec3(0, 0, focalLength)
-	lowerLeftCorner := origin
-	lowerLeftCorner = cartesian.Sub(&lowerLeftCorner, &halfXDim)
-	lowerLeftCorner = cartesian.Sub(&lowerLeftCorner, &halfYDim)
-	lowerLeftCorner = cartesian.Sub(&lowerLeftCorner, &focalLengthVec)
+	xDim := cc.NewVec3(viewportWidth, 0, 0)
+	yDim := cc.NewVec3(0, viewportWidth, 0)
 
-	fmt.Printf("lowerLeftCorner: %+v", lowerLeftCorner)
+	lowerLeftCorner := cc.Sub(origin, cc.Div(xDim, 2.0), cc.Div(yDim, 2.0), cc.NewVec3(0, 0, focalLength))
 
 	img := image.NewRGBA(image.Rect(0, 0, imageWidth, imageHeight))
 
@@ -41,13 +40,13 @@ func main() {
 	for j := imageHeight - 1; j >= 0; j-- {
 		l.Printf("Scanlines remaining: %d\n", j)
 		for i := 0; i < imageWidth; i++ {
-			c := cartesian.NewColor(
-				255.999*(float64(i)/float64(imageWidth-1)),
-				255.999*(float64(j)/float64(imageHeight-1)),
-				255.999*0.25,
-			)
+			u := float64(i) / float64(imageWidth-1)
+			v := float64(j) / float64(imageHeight-1)
 
-			img.Set(i, j, color.RGBA{uint8(c.X), uint8(c.Y), uint8(c.Z), 255})
+			r := cc.NewRay(origin, cc.Sub(cc.Add(lowerLeftCorner, cc.Mul(xDim, u), cc.Mul(yDim, v)), origin))
+			c := rayColor(r)
+
+			img.Set(i, j, color.RGBA{uint8(255.999 * c.X), uint8(255.999 * c.Y), uint8(255.999 * c.Z), 255})
 		}
 	}
 
