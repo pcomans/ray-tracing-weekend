@@ -8,7 +8,7 @@ import (
 	"log"
 	"os"
 
-	cc "phpp.me/go_practice/cartesian"
+	cc "github.com/pcomans/ray-tracing-weekend/cartesian"
 )
 
 func rayColor(r cc.Ray) cc.Color {
